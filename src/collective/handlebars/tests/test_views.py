@@ -85,22 +85,25 @@ class TestHandlebarTile(unittest.TestCase):
 
     def setUp(self):
         self.tile = HandlebarTile(self.layer['portal'], self.layer['request'])
+        self.template_path = os.path.join(TEST_DATA__DIR,
+                                          '_slideshow_slide.js.hbs')
 
     def test_get_contents_default(self):
         """ Method `get_tile_data` is not implemented in base class
 
         :return:
         """
-        view = HandlebarsBrowserView(self.layer['portal'], self.layer['request'])
+        view = HandlebarsBrowserView(self.layer['portal'],
+                                     self.layer['request'])
         self.assertRaises(NotImplementedError, view.get_contents)
 
     def test_get_hbs_template(self):
-        template = self.tile._get_hbs_template(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs'))
+        template = self.tile._get_hbs_template(self.template_path)
         self.assertEqual(template({'src': 'foo', 'alt': 'bar'}).strip(),
                          u'<img src="foo" alt="bar">')
 
     def test_get_partial_key(self):
-        self.assertEqual(self.tile._get_partial_key(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs')),
+        self.assertEqual(self.tile._get_partial_key(self.template_path),
                          '_slideshow_slide.js')
 
     def test_call_notemplate(self):
@@ -108,6 +111,5 @@ class TestHandlebarTile(unittest.TestCase):
 
     def test_call_with_template(self):
         tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
-        setattr(tile, 'index',
-                DummyHbsTemplate(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs')))
+        setattr(tile, 'index', DummyHbsTemplate(self.template_path))
         self.assertEqual(tile().strip(), u'<img src="foo" alt="bar">')
