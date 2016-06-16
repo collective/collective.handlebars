@@ -26,7 +26,8 @@ class TestBrowserView(unittest.TestCase):
 
     def test_base_view(self):
         """Test if collective.handlebars is installed."""
-        self.assertEqual(HandlebarsBrowserView(self.portal, self.layer['request'])(), '')
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertEqual(view(), '')
 
     def test_example_view(self):
         """Test that a handlebars template is rendered."""
