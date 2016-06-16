@@ -2,6 +2,7 @@
 """Setup tests for this package."""
 from collective.handlebars.testing import COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING  # noqa
 from collective.handlebars.browser.views import HandlebarsBrowserView
+from collective.handlebars.browser.views import HandlebarTile
 
 from plone import api
 import os.path
@@ -14,6 +15,18 @@ TEST_DATA__DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               'data')
 
 
+class DummyHbsTile(HandlebarTile):
+
+    def get_contents(self):
+        return {'src': 'foo', 'alt': 'bar'}
+
+
+class DummyHbsTemplate(object):
+
+    def __init__(self, filename):
+        self.filename = filename
+
+
 class TestBrowserView(unittest.TestCase):
     """Test that collective.handlebars is properly installed."""
 
@@ -23,6 +36,14 @@ class TestBrowserView(unittest.TestCase):
         """Custom shared utility setup for tests."""
         self.portal = self.layer['portal']
         self.view = self.portal.restrictedTraverse('@@hbs_test_view')
+
+    def test_get_contents_default(self):
+        """ Method `get_tile_data` is not implemented in base class
+
+        :return:
+        """
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertRaises(NotImplementedError, view.get_contents)
 
     def test_base_view(self):
         """Test if collective.handlebars is installed."""
@@ -55,3 +76,38 @@ class TestUninstall(unittest.TestCase):
         from collective.handlebars.interfaces import ICollectiveHandlebarsLayer
         from plone.browserlayer import utils
         self.assertNotIn(ICollectiveHandlebarsLayer, utils.registered_layers())
+
+
+class TestHandlebarTile(unittest.TestCase):
+    """Test that fhnw.web16theme viewlets."""
+
+    layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.tile = HandlebarTile(self.layer['portal'], self.layer['request'])
+
+    def test_get_contents_default(self):
+        """ Method `get_tile_data` is not implemented in base class
+
+        :return:
+        """
+        view = HandlebarsBrowserView(self.layer['portal'], self.layer['request'])
+        self.assertRaises(NotImplementedError, view.get_contents)
+
+    def test_get_hbs_template(self):
+        template = self.tile._get_hbs_template(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs'))
+        self.assertEqual(template({'src': 'foo', 'alt': 'bar'}).strip(),
+                         u'<img src="foo" alt="bar">')
+
+    def test_get_partial_key(self):
+        self.assertEqual(self.tile._get_partial_key(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs')),
+                         '_slideshow_slide.js')
+
+    def test_call_notemplate(self):
+        self.assertEqual(self.tile(), '')  # no template referenced in zcml
+
+    def test_call_with_template(self):
+        tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
+        setattr(tile, 'index',
+                DummyHbsTemplate(os.path.join(TEST_DATA__DIR, '_slideshow_slide.js.hbs')))
+        self.assertEqual(tile().strip(), u'<img src="foo" alt="bar">')

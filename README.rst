@@ -8,7 +8,7 @@ Handlebars.js templating for Plone
 
 The idea of this package is to provide handlebars.js support for Plone.
 It is a developer addon and provides additional variants of
-BrowserView, Portlet, Viewlet and Tile which utilizes handlbars.js_
+BrowserView, Portlet, Viewlet and Tile which utilizes `handlebars.js <http://handlebarsjs.com/>`_
 templating instead of TAL. It can be used to optimze the workflow
 between designers and Plone developers.
 
@@ -31,11 +31,13 @@ Examples
 This add-on can be seen in action at the following sites:
 - Is there a page on the internet where everybody can see the features?
 
+(still to come)
+
 
 Documentation
 -------------
 
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+Full documentation for end users can be found in the "docs" folder.
 
 Installation
 ------------
@@ -58,14 +60,7 @@ Contribute
 
 - Issue Tracker: https://github.com/collective/collective.handlebars/issues
 - Source Code: https://github.com/collective/collective.handlebars
-- Documentation: https://docs.plone.org/foo/bar
-
-
-Support
--------
-
-If you are having issues, please let us know.
-We have a mailing list located at: project@example.com
+- Documentation: https://github.com/collective/collective.handlebars/docs
 
 
 License
@@ -73,4 +68,3 @@ License
 
 The project is licensed under the GPLv2.
 
-.. _handlebars.js: http://handlebarsjs.com/
