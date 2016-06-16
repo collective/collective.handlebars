@@ -3,16 +3,24 @@
    This text does not appear on pypi or github. It is a comment.
 
 ==============================================================================
-collective.handlebars
+Handlebars.js templating for Plone
 ==============================================================================
 
-Tell me what your product does
+The idea of this package is to provide handlebars.js support for Plone.
+It is a developer addon and provides additional variants of
+BrowserView, Portlet, Viewlet and Tile which utilizes handlbars.js_
+templating instead of TAL. It can be used to optimze the workflow
+between designers and Plone developers
+
 
 Features
 --------
 
-- Can be bullet points
+Provides the following view components with handlebars support:
 
+ - BrowserView
+ - Plone template
+ - Tile
 
 Examples
 --------
@@ -25,15 +33,6 @@ Documentation
 -------------
 
 Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
-
-
-Translations
-------------
-
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
-
 
 Installation
 ------------
@@ -70,3 +69,5 @@ License
 -------
 
 The project is licensed under the GPLv2.
+
+.. _handlebars.js: http://handlebarsjs.com/
