@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="collective.handlebars">
+
+  <browser:page
+        name="hbs_test_view"
+        for="*"
+        class=".testing.HBSTestView"
+        template="tests/data/minimal.hbs"
+        permission="zope2.View"
+        />
+
+  <configure zcml:condition="installed plone.tile">
+
+  <plone:tile
+        name="fhnw.elastico.tiles.slider"
+        title="Estatico Slider"
+        description="A PoC tile for elastico"
+        add_permission="cmf.ModifyPortalContent"
+        class=".browser.tile.SliderTile"
+        for="*"
+        permission="zope.Public"
+        template="templates/slideshow.hbs"
+        schema=".browser.tile.ISliderTile"
+        />
+  </configure>
+
+</configure>

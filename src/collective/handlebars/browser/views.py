@@ -25,7 +25,7 @@ compiler = Compiler()
 
 class HandlebarMixin:
 
-    def get_tile_data(self):
+    def get_contents(self):
         """ Get CMS data and put it in a JSON format for Estatico components
 
         :return: dictonary (must not be a JSON structure! The conversion is handled by the templating engine)
@@ -54,7 +54,7 @@ class HandlebarMixin:
         # reuse filename from tile definition in zcml but read file here
         # otherwise it is interpreted as XML/PT
         if not hasattr(self, 'index'):  # noqa
-            return ''   # no template specified
+            return ''   # no template specified, should we raise an error instead?
 
         hbs_file = self.index.filename
         hbs_dir = os.path.dirname(hbs_file)
@@ -64,7 +64,7 @@ class HandlebarMixin:
         partial_files = glob.glob(hbs_dir + '/_*.hbs')
         partials = {self._get_partial_key(partial_file): self._get_hbs_template(partial_file)
                     for partial_file in partial_files}
-        return hbs_template(self.get_tile_data(), partials=partials)
+        return hbs_template(self.get_contents(), partials=partials)
 
 
 class HandlebarsBrowserView(BrowserView, HandlebarMixin):

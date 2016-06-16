@@ -10,7 +10,10 @@ The idea of this package is to provide handlebars.js support for Plone.
 It is a developer addon and provides additional variants of
 BrowserView, Portlet, Viewlet and Tile which utilizes handlbars.js_
 templating instead of TAL. It can be used to optimze the workflow
-between designers and Plone developers
+between designers and Plone developers.
+
+The product was developed and tested with Plone 5 but might work
+with older versions too.
 
 
 Features

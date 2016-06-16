@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collective.handlebars.browser.views import HandlebarsBrowserView
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
@@ -19,9 +20,16 @@ class CollectiveHandlebarsLayer(PloneSandboxLayer):
         # The z3c.autoinclude feature is disabled in the Plone fixture base
         # layer.
         self.loadZCML(package=collective.handlebars)
+        self.loadZCML(package=collective.handlebars, name='testing.zcml')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.handlebars:default')
+
+
+class HBSTestView(HandlebarsBrowserView):
+
+    def get_contents(self):
+        return {'title': u'Fäncy Title', 'body': u'This is the body'}
 
 
 COLLECTIVE_HANDLEBARS_FIXTURE = CollectiveHandlebarsLayer()
