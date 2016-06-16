@@ -1,0 +1,5 @@
+====================
+collective.handlebars
+====================
+
+User documentation
