@@ -7,7 +7,6 @@ from collective.handlebars.browser.views import HandlebarTile
 from plone import api
 import os.path
 
-
 import unittest
 
 

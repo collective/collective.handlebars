@@ -8,6 +8,7 @@ from pybars import Compiler
 
 import glob
 import os.path
+import sys
 
 try:
     get_distribution('plone.tiles')
@@ -23,7 +24,12 @@ else:
 compiler = Compiler()
 
 
-class HandlebarMixin:
+def package_home(gdict):
+    filename = gdict["__file__"]
+    return os.path.dirname(filename)
+
+
+class HandlebarsMixin:
 
     def get_contents(self):
         """ Get CMS data and put it in a JSON format for hbs inclusion
@@ -53,13 +59,21 @@ class HandlebarMixin:
             hbs_template = unicode(f.read(), 'utf-8')
         return compiler.compile(hbs_template)
 
-    def hbs_snippet(self):
-        # reuse filename from tile definition in zcml but read file here
-        # otherwise it is interpreted as XML/PT
-        if not hasattr(self, 'index'):  # noqa
-            return ''   # no template specified, should we raise an error?
+    def hbs_snippet(self, filename=None, _prefix=None):
+        if filename:
+            # first scenario: get snippet from filename
+            path = self.get_path_from_prefix(_prefix)
+            hbs_file = os.path.join(path, filename)
+            if not os.path.isfile(hbs_file):
+                raise ValueError('No such file', hbs_file)
+        elif hasattr(self, 'index'):  # noqa
+            # second scenario: get snippet from zcml
+            # reuse filename from tile definition in zcml but read file here
+            # otherwise it is interpreted as XML/PT
+            hbs_file = self.index.filename
+        else:
+            raise ValueError('No template found!')
 
-        hbs_file = self.index.filename
         hbs_dir = os.path.dirname(hbs_file)
 
         hbs_template = self._get_hbs_template(hbs_file)
@@ -69,15 +83,24 @@ class HandlebarMixin:
                     for partial_file in partial_files}
         return hbs_template(self.get_contents(), partials=partials)
 
+    def get_path_from_prefix(self, _prefix):
+        if isinstance(_prefix, str):
+            path = _prefix
+        else:
+            if _prefix is None:
+                _prefix = sys._getframe(2).f_globals
+            path = package_home(_prefix)
+        return path
 
-class HandlebarsBrowserView(BrowserView, HandlebarMixin):
+
+class HandlebarsBrowserView(BrowserView, HandlebarsMixin):
     """ A simple browserview using hbs as templating engine"""
 
     def __call__(self, *args, **kwargs):
         return self.hbs_snippet()
 
 
-class HandlebarsPloneView(BrowserView, HandlebarMixin):
+class HandlebarsPloneView(BrowserView, HandlebarsMixin):
     """ A hbs view rendered in the content slot of the main template of Plone
     """
 
@@ -87,7 +110,7 @@ class HandlebarsPloneView(BrowserView, HandlebarMixin):
         return self.main_template(*args, **kwargs)
 
 
-class HandlebarTile(Tile, HandlebarMixin):
+class HandlebarTile(Tile, HandlebarsMixin):
 
     def __call__(self, *args, **kwargs):
         return self.hbs_snippet()
