@@ -9,6 +9,7 @@ class HiddenProfiles(object):
     def getNonInstallableProfiles(self):
         """Hide uninstall profile from site-creation and quickinstaller"""
         return [
+            'collective.handlebars:default',
             'collective.handlebars:uninstall',
         ]
 
