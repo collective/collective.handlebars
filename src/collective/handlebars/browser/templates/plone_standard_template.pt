@@ -7,10 +7,9 @@
 
     <metal:block fill-slot="content-core">
 
-        <div class="hero">
         <div id="content-core" tal:replace="structure view/hbs_snippet">
 
-        </div>
+
         </div>
 
     </metal:block>
