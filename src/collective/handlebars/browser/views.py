@@ -68,7 +68,8 @@ class HandlebarsMixin:
 
         :param hbs_dir: directory of master template
                (/home/vagrant/templates/)
-        :return: dictonary with compiled partials templates ({'subitem': <template 'subitem'>})
+        :return: dictonary with compiled partials templates
+                 ({'subitem': <template 'subitem'>})
         """
         # get all partials from directory, asuming they are prefixed with `_`
         partial_files = glob.glob(hbs_dir + '/_*.hbs')
