@@ -4,9 +4,10 @@ from pkg_resources import get_distribution
 
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone import api
 from pybars import Compiler
+from zope.i18n import translate
 
-import glob
 import os.path
 import sys
 
@@ -72,9 +73,7 @@ class HandlebarsMixin:
                  ({'subitem': <template 'subitem'>})
         """
         # get all partials from directory, asuming they are prefixed with `_`
-        partial_files = glob.glob(hbs_dir + '/_*.hbs')
-        return {self._get_partial_key(partial_file): self._get_hbs_template(partial_file)   # noqa
-                for partial_file in partial_files}
+        return {}
 
     def hbs_snippet(self, filename=None, _prefix=None):
         if filename:
@@ -105,6 +104,17 @@ class HandlebarsMixin:
                 _prefix = sys._getframe(2).f_globals
             path = package_home(_prefix)
         return path
+
+    def translate(self, msgid, domain=None, mapping=None, context=None,
+                  target_language=None, default=None):
+        if not target_language:
+            target_language = api.portal.get_current_language(context)
+        return translate(msgid=msgid,
+                         domain=domain,
+                         mapping=mapping,
+                         context=context,
+                         default=default,
+                         target_language=target_language)
 
 
 class HandlebarsBrowserView(BrowserView, HandlebarsMixin):
