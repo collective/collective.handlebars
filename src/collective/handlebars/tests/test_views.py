@@ -5,6 +5,7 @@ from collective.handlebars.browser.views import HandlebarsBrowserView
 from collective.handlebars.browser.views import HandlebarTile
 
 from plone import api
+from zope.i18nmessageid import MessageFactory
 import os.path
 
 import unittest
@@ -12,6 +13,7 @@ import unittest
 
 TEST_DATA__DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               'data')
+_ = MessageFactory('plone')
 
 
 class DummyHbsTile(HandlebarTile):
@@ -24,6 +26,19 @@ class DummyHbsTemplate(object):
 
     def __init__(self, filename):
         self.filename = filename
+
+
+class DummyHbsFile(HandlebarsBrowserView):
+
+    def get_contents(self):
+        return {'title': u'File Test',
+                'body': u'Hello HBS World!'}
+
+    def __call__(self):
+        return self.hbs_snippet('data/minimal.hbs')
+
+    def invalid(self):
+        return self.hbs_snippet('data/minimal_notfound.hbs')
 
 
 class TestBrowserView(unittest.TestCase):
@@ -54,6 +69,28 @@ class TestBrowserView(unittest.TestCase):
         view = self.portal.restrictedTraverse('@@hbs_test_view')
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal.html'))
         self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+
+    def test_translate(self):
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertEqual(view.translate(_('Allowed'), target_language='de'),
+                         u'Erlaubt')
+
+    def test_translate_default_lang(self):
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertEqual(view.translate(_('Allowed')), u'Allowed')
+
+    def test_hbs_snippet(self):
+        view = DummyHbsFile(self.portal, self.layer['request'])
+        result_file = open(os.path.join(TEST_DATA__DIR, 'minimal_file.html'))
+        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+
+    def test_hbs_snippet_nofile(self):
+        view = DummyHbsFile(self.portal, self.layer['request'])
+        self.assertRaises(ValueError, view.invalid)
+
+    def test_get_path_from_prefix(self):
+        view = DummyHbsFile(self.portal, self.layer['request'])
+        self.assertEqual(view.get_path_from_prefix(_prefix='.'), '.')
 
 
 class TestPloneView(unittest.TestCase):

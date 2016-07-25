@@ -15,7 +15,8 @@ between designers and Plone developers.
 The product was developed and tested with Plone 5 but might work
 with older versions too.
 
-This product does not do anything user related on itself! It provides an API
+This product does not do anything user related on itself!
+It can not be installed as a Plone addon. What it does is to provide an API
 for developers to integrate an alternative templating engine into Plone.
 
 Features

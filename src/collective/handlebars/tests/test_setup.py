@@ -48,3 +48,13 @@ class TestUninstall(unittest.TestCase):
         from collective.handlebars.interfaces import ICollectiveHandlebarsLayer
         from plone.browserlayer import utils
         self.assertNotIn(ICollectiveHandlebarsLayer, utils.registered_layers())
+
+    def test_hiddenprofiles(self):
+        """ Test uninstall profile is hidden
+        :return:None
+        """
+        from collective.handlebars.setuphandlers import HiddenProfiles
+        self.assertIn('collective.handlebars:default',
+                      HiddenProfiles().getNonInstallableProfiles())
+        self.assertIn('collective.handlebars:uninstall',
+                      HiddenProfiles().getNonInstallableProfiles())
