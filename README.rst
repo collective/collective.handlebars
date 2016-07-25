@@ -15,23 +15,146 @@ between designers and Plone developers.
 The product was developed and tested with Plone 5 but might work
 with older versions too.
 
+This product does not do anything user related on itself! It provides an API
+for developers to integrate an alternative templating engine into Plone.
 
 Features
 --------
 
-Provides the following view components with handlebars support:
+The prodcut provides the following view components with handlebars support:
 
  - BrowserView
  - Plone template
  - Tile
 
+Since portlets and viewlets do not make any assumtion on the
+templating and return everything which is returned by the
+render-method of the Renderer they are supported too.
+
 Examples
 --------
 
-This add-on can be seen in action at the following sites:
-- Is there a page on the internet where everybody can see the features?
+A handlebar BrowserView: ::
 
-(still to come)
+  from collective.handlebars.browser.views import HandlebarsBrowserView
+
+  class HBSBrowserView(HandlebarsBrowserView): ::
+
+      def get_contents(self):
+          return {'msg': u'Hello World!'}
+
+And the according configure.zcml: ::
+
+  <configure
+      xmlns="http://namespaces.zope.org/zope"
+      xmlns:browser="http://namespaces.zope.org/browser"
+      i18n_domain="mydomain">
+
+    <browser:page
+         name="carousel_view"
+         for="*"
+         class=".views.HBSBrowserView"
+         template="helloworld.hbs"
+         permission="zope2.View"
+         />
+
+
+A handlebar Plone template: ::
+
+  from collective.handlebars.browser.views import HandlebarsPloneView
+
+  class CarouselView(HandlebarsPloneView):
+
+      def get_contents(self):
+          images = self.context.listFolderContents(
+              contentFilter={'portal_type': ['Image', ]})
+
+           slides = [{'title': safe_unicode(img.Title()),
+                      'category': safe_unicode(img.Description()),
+                      'link': img.remoteUrl,
+                      'image': scale(img)} for img in images]
+
+           return {'slides': slides, }}
+
+And the according configure.zcml: ::
+
+  <configure
+      xmlns="http://namespaces.zope.org/zope"
+      xmlns:browser="http://namespaces.zope.org/browser"
+      i18n_domain="mydomain">
+
+    <browser:page
+         name="carousel_view"
+         for="*"
+         class=".views.CarouselView"
+         template="carousel.hbs"
+         permission="zope2.View"
+         />
+
+</configure>
+
+A handlebar portlet: ::
+
+  from collective.handlebars.browser.views import HandlebarsMixin
+  from plone.app.multilingual.browser.selector import LanguageSelectorViewlet
+
+  class LanguageSwitcherRenderer(base.Renderer, HandlebarsMixin):
+      """ Render a language switcher portlet
+      """
+
+      def get_contents(self):
+          """ Get available and current site language
+          :return: dictonary ()
+          """
+          viewlet = LanguageSelectorViewlet(self.context, self.request, self, None)
+          viewlet.update()
+          result = []
+          for lang in viewlet.languages():
+              result.append(
+                  {"lang": lang['code'].upper(),
+                   "url": lang['url'],
+                   "active": lang['selected'] and 'is_active' or ''})
+
+          return {"languages": result}
+
+      def render(self):
+          return self.hbs_snippet(filename='langswitcher.hbs')
+
+A handlebar tile: ::
+
+    class ContactPersonTile(HandlebarTile):
+
+        def get_contents(self):
+            """ Get CMS data and put it in a JSON format
+            """
+
+            return {
+                'fullname': u'George Miller',
+                'phone': '+1 50 206 67 99',
+                'email': 'george@example.com',
+            }
+
+And the according configure.zcml: ::
+
+    <configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:plone="http://namespaces.plone.org/plone"
+        i18n_domain="fhnw.contentwidgets">
+
+      <include package="plone.app.mosaic" />
+
+      <plone:tile
+          name="myproduct.contactpersontile"
+          title="ContactPerson"
+          description="A card of a person"
+          add_permission="cmf.ModifyPortalContent"
+          class=".tiles.ContactPersonTile"
+          for="*"
+          permission="zope.Public"
+          schema=".tiles.ContactPersonTile"
+          template="contactperson.hbs"
+      />
+    </configure>
 
 
 Documentation

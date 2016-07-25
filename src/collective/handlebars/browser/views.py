@@ -16,7 +16,7 @@ try:
 except DistributionNotFound:
     class Tile(BrowserView):
         """Fake Tile which is only a BrowserView"""
-else:
+else:    # pragma: no cover
     from plone.tiles.tile import Tile
 
 

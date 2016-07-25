@@ -27,7 +27,7 @@ class DummyHbsTemplate(object):
 
 
 class TestBrowserView(unittest.TestCase):
-    """Test that collective.handlebars is properly installed."""
+    """Test the collective.handlebars BrowserView component."""
 
     layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
 
@@ -45,15 +45,45 @@ class TestBrowserView(unittest.TestCase):
         self.assertRaises(NotImplementedError, view.get_contents)
 
     def test_base_view(self):
-        """Test if collective.handlebars is installed."""
+        """ An error is raised, if no template is specified """
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
-        self.assertEqual(view(), '')
+        self.assertRaises(ValueError, view)
 
     def test_example_view(self):
         """Test that a handlebars template is rendered."""
         view = self.portal.restrictedTraverse('@@hbs_test_view')
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal.html'))
         self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+
+
+class TestPloneView(unittest.TestCase):
+    """Test the collective.handlebars BrowserView component."""
+
+    layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
+
+    def setUp(self):
+        """Custom shared utility setup for tests."""
+        self.portal = self.layer['portal']
+        self.view = self.portal.restrictedTraverse('@@hbs_test_ploneview')
+
+    def test_get_contents_default(self):
+        """ Method `get_tile_data` is not implemented in base class
+
+        :return:
+        """
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertRaises(NotImplementedError, view.get_contents)
+
+    def test_base_view(self):
+        """ An error is raised, if no template is specified """
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        self.assertRaises(ValueError, view)
+
+    def test_example_view(self):
+        """Test that a handlebars template is rendered."""
+        view = self.portal.restrictedTraverse('@@hbs_test_ploneview')
+        result_file = open(os.path.join(TEST_DATA__DIR, 'minimal_plone.html'))
+        self.assertIn(unicode(result_file.read(), encoding='utf-8'), view())
 
 
 class TestUninstall(unittest.TestCase):
@@ -106,7 +136,7 @@ class TestHandlebarTile(unittest.TestCase):
                          '_slideshow_slide.js')
 
     def test_call_notemplate(self):
-        self.assertEqual(self.tile(), '')  # no template referenced in zcml
+        self.assertRaises(ValueError, self.tile)  # no template referenced in zcml
 
     def test_call_with_template(self):
         tile = DummyHbsTile(self.layer['portal'], self.layer['request'])

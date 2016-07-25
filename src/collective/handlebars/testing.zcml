@@ -13,6 +13,14 @@
         permission="zope2.View"
         />
 
+   <browser:page
+        name="hbs_test_ploneview"
+        for="*"
+        class=".testing.HBSTestPloneView"
+        template="tests/data/minimal.hbs"
+        permission="zope2.View"
+        />
+
   <configure zcml:condition="installed plone.tile">
 
   <plone:tile

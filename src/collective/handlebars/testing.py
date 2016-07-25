@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.handlebars.browser.views import HandlebarsBrowserView
+from collective.handlebars.browser.views import HandlebarsPloneView
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
@@ -30,6 +31,12 @@ class HBSTestView(HandlebarsBrowserView):
 
     def get_contents(self):
         return {'title': u'Fäncy Title', 'body': u'This is the body'}
+
+
+class HBSTestPloneView(HandlebarsPloneView):
+
+    def get_contents(self):
+        return {'title': u'Fäncy Title', 'body': u'This is the Plone View body'}
 
 
 COLLECTIVE_HANDLEBARS_FIXTURE = CollectiveHandlebarsLayer()
