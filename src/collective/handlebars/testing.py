@@ -36,7 +36,8 @@ class HBSTestView(HandlebarsBrowserView):
 class HBSTestPloneView(HandlebarsPloneView):
 
     def get_contents(self):
-        return {'title': u'Fäncy Title', 'body': u'This is the Plone View body'}
+        return {'title': u'Fäncy Title',
+                'body': u'This is the Plone View body'}
 
 
 COLLECTIVE_HANDLEBARS_FIXTURE = CollectiveHandlebarsLayer()

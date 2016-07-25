@@ -136,7 +136,8 @@ class TestHandlebarTile(unittest.TestCase):
                          '_slideshow_slide.js')
 
     def test_call_notemplate(self):
-        self.assertRaises(ValueError, self.tile)  # no template referenced in zcml
+        """ An error is raised, if no template is specified """
+        self.assertRaises(ValueError, self.tile)
 
     def test_call_with_template(self):
         tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
