@@ -39,7 +39,7 @@ A handlebar BrowserView: ::
 
   from collective.handlebars.browser.views import HandlebarsBrowserView
 
-  class HBSBrowserView(HandlebarsBrowserView): ::
+  class HBSBrowserView(HandlebarsBrowserView):
 
       def get_contents(self):
           return {'msg': u'Hello World!'}
@@ -92,7 +92,7 @@ And the according configure.zcml: ::
          permission="zope2.View"
          />
 
-</configure>
+  </configure>
 
 A handlebar portlet: ::
 
