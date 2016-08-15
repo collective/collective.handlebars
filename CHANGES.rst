@@ -5,7 +5,8 @@ Changelog
 1.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add registry for templates
+  [tomgross]
 
 
 1.0b1 (2016-07-25)

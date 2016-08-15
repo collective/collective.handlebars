@@ -21,8 +21,8 @@ else:    # pragma: no cover
 
 
 # global handlebars compiler
-# TODO: Compile all templates at startup?
 compiler = Compiler()
+HBS_REGISTRY = {}
 
 
 def package_home(gdict):
@@ -56,9 +56,14 @@ class HandlebarsMixin:
                (/home/vagrant/templates/_slideshow.js.hbs)
         :return: compiled hbs template
         """
-        with open(hbs_filename) as f:
-            hbs_template = unicode(f.read(), 'utf-8')
-        return compiler.compile(hbs_template)
+        if hbs_filename in HBS_REGISTRY:
+            compiled_template = HBS_REGISTRY[hbs_filename]
+        else:
+            with open(hbs_filename) as f:
+                hbs_template = unicode(f.read(), 'utf-8')
+                compiled_template = compiler.compile(hbs_template)
+                HBS_REGISTRY[hbs_filename] = compiled_template
+        return compiled_template
 
     def get_partials(self, hbs_dir):
         """ Get partials for rendering the master hbs_template
