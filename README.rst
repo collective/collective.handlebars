@@ -6,6 +6,9 @@
 Handlebars.js templating for Plone
 ==============================================================================
 
+.. image:: https://travis-ci.org/collective/collective.handlebars.svg?branch=master
+       :target: https://travis-ci.org/collective/collective.handlebars
+
 The idea of this package is to provide handlebars.js support for Plone.
 It is a developer addon and provides additional variants of
 BrowserView, Portlet, Viewlet and Tile which utilizes `handlebars.js <http://handlebarsjs.com/>`_
