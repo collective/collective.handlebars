@@ -29,11 +29,13 @@ class DummyHbsTemplate(object):
     def __init__(self, filename):
         self.filename = filename
 
+
 @interface.implementer(ITranslationDomain)
 class TestDomain(dict):
 
     def translate(self, text, *_, **__):
         return self[text], _[2]
+
 
 class DummyHbsFile(HandlebarsBrowserView):
 
@@ -79,13 +81,15 @@ class TestBrowserView(unittest.TestCase):
 
     def test_translate(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
-        component.provideUtility(TestDomain(Allowed=_('Erlaubt')), name='my.domain')
+        component.provideUtility(TestDomain(Allowed=_('Erlaubt')),
+                                 name='my.domain')
         self.assertEqual(view.translate(_('Allowed'), target_language='de'),
                          (u'Erlaubt', 'de'))
 
     def test_translate_default_lang(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
-        component.provideUtility(TestDomain(Allowed=_('Allowed')), name='my.domain')
+        component.provideUtility(TestDomain(Allowed=_('Allowed')),
+                                 name='my.domain')
         self.assertEqual(view.translate(_('Allowed')), (u'Allowed', 'en'))
 
     def test_hbs_snippet(self):
