@@ -6,6 +6,8 @@ from collective.handlebars.browser.views import HandlebarTile
 
 from plone import api
 from zope.i18nmessageid import MessageFactory
+from zope import component, interface
+from zope.i18n.interfaces import ITranslationDomain
 import os.path
 
 import unittest
@@ -13,7 +15,7 @@ import unittest
 
 TEST_DATA__DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               'data')
-_ = MessageFactory('plone')
+_ = MessageFactory('my.domain')
 
 
 class DummyHbsTile(HandlebarTile):
@@ -27,6 +29,11 @@ class DummyHbsTemplate(object):
     def __init__(self, filename):
         self.filename = filename
 
+@interface.implementer(ITranslationDomain)
+class TestDomain(dict):
+
+    def translate(self, text, *_, **__):
+        return self[text], _[2]
 
 class DummyHbsFile(HandlebarsBrowserView):
 
@@ -72,12 +79,14 @@ class TestBrowserView(unittest.TestCase):
 
     def test_translate(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        component.provideUtility(TestDomain(Allowed=_('Erlaubt')), name='my.domain')
         self.assertEqual(view.translate(_('Allowed'), target_language='de'),
-                         u'Erlaubt')
+                         (u'Erlaubt', 'de'))
 
     def test_translate_default_lang(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
-        self.assertEqual(view.translate(_('Allowed')), u'Allowed')
+        component.provideUtility(TestDomain(Allowed=_('Allowed')), name='my.domain')
+        self.assertEqual(view.translate(_('Allowed')), (u'Allowed', 'en'))
 
     def test_hbs_snippet(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
