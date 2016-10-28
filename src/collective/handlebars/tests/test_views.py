@@ -2,7 +2,8 @@
 """Setup tests for this package."""
 from collective.handlebars.testing import COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING  # noqa
 from collective.handlebars.browser.views import HandlebarsBrowserView
-from collective.handlebars.browser.views import HandlebarTile
+from collective.handlebars.browser.views import HandlebarsTile
+from collective.handlebars.browser.views import HandlebarsPersistentTile
 
 from plone import api
 from zope.i18nmessageid import MessageFactory
@@ -18,7 +19,13 @@ TEST_DATA__DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 _ = MessageFactory('my.domain')
 
 
-class DummyHbsTile(HandlebarTile):
+class DummyHbsTile(HandlebarsTile):
+
+    def get_contents(self):
+        return {'src': 'foo', 'alt': 'bar'}
+
+
+class DummyHbsPersistentTile(HandlebarsPersistentTile):
 
     def get_contents(self):
         return {'src': 'foo', 'alt': 'bar'}
@@ -163,7 +170,46 @@ class TestHandlebarTile(unittest.TestCase):
     layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
 
     def setUp(self):
-        self.tile = HandlebarTile(self.layer['portal'], self.layer['request'])
+        self.tile = HandlebarsTile(self.layer['portal'], self.layer['request'])
+        self.template_path = os.path.join(TEST_DATA__DIR,
+                                          '_slideshow_slide.js.hbs')
+
+    def test_get_contents_default(self):
+        """ Method `get_tile_data` is not implemented in base class
+
+        :return:
+        """
+        view = HandlebarsBrowserView(self.layer['portal'],
+                                     self.layer['request'])
+        self.assertRaises(NotImplementedError, view.get_contents)
+
+    def test_get_hbs_template(self):
+        template = self.tile._get_hbs_template(self.template_path)
+        self.assertEqual(template({'src': 'foo', 'alt': 'bar'}).strip(),
+                         u'<img src="foo" alt="bar">')
+
+    def test_get_partial_key(self):
+        self.assertEqual(self.tile._get_partial_key(self.template_path),
+                         '_slideshow_slide.js')
+
+    def test_call_notemplate(self):
+        """ An error is raised, if no template is specified """
+        self.assertRaises(ValueError, self.tile)
+
+    def test_call_with_template(self):
+        tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
+        setattr(tile, 'index', DummyHbsTemplate(self.template_path))
+        self.assertEqual(tile().strip(), u'<img src="foo" alt="bar">')
+
+
+class TestHandlebarPersistentTile(unittest.TestCase):
+    """Test that fhnw.web16theme viewlets."""
+
+    layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.tile = HandlebarsPersistentTile(
+            self.layer['portal'], self.layer['request'])
         self.template_path = os.path.join(TEST_DATA__DIR,
                                           '_slideshow_slide.js.hbs')
 

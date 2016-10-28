@@ -13,11 +13,14 @@ import sys
 
 try:
     get_distribution('plone.tiles')
-except DistributionNotFound:
+except DistributionNotFound:   # pragma: no cover
     class Tile(BrowserView):
         """Fake Tile which is only a BrowserView"""
+    class PersistentTile(BrowserView):
+        """Fake persistent Tile which is only a BrowserView"""
 else:    # pragma: no cover
     from plone.tiles.tile import Tile
+    from plone.tiles.tile import PersistentTile
 
 
 # global handlebars compiler
@@ -139,7 +142,17 @@ class HandlebarsPloneView(BrowserView, HandlebarsMixin):
         return self.main_template(*args, **kwargs)
 
 
-class HandlebarTile(Tile, HandlebarsMixin):
+class HandlebarsTile(Tile, HandlebarsMixin):
+
+    def __call__(self, *args, **kwargs):
+        return self.hbs_snippet()
+
+
+# BBB
+HandlebarTile = HandlebarsTile
+
+
+class HandlebarsPersistentTile(PersistentTile, HandlebarsMixin):
 
     def __call__(self, *args, **kwargs):
         return self.hbs_snippet()

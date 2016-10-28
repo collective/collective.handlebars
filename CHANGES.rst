@@ -5,7 +5,11 @@ Changelog
 1.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add persistent tile wrapper
+  [tomgross]
+
+- Unify names. It is now **HandlebarsTile**
+  [tomgross]
 
 
 1.0rc1 (2016-08-29)
