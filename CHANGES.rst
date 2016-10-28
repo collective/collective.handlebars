@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1 (unreleased)
+1.1 (2016-10-28)
 ----------------
 
 - Add support for helpers
