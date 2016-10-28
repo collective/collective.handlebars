@@ -5,7 +5,8 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add support for helpers
+  [tomgross]
 
 
 1.0 (2016-10-28)

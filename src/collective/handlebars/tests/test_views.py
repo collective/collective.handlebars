@@ -57,6 +57,22 @@ class DummyHbsFile(HandlebarsBrowserView):
         return self.hbs_snippet('data/minimal_notfound.hbs')
 
 
+class HelperHbsView(HandlebarsBrowserView):
+
+    def get_contents(self):
+        return {'title': u'File Test',
+                'body': u'Hello HBS Wörld!'}
+
+    def _myhelper(self, options, items):
+        return u'HELPER: ' + items
+
+    def get_helpers(self):
+        return {'myhelper': self._myhelper}
+
+    def __call__(self):
+        return self.hbs_snippet('data/helper.hbs')
+
+
 class TestBrowserView(unittest.TestCase):
     """Test the collective.handlebars BrowserView component."""
 
@@ -111,6 +127,11 @@ class TestBrowserView(unittest.TestCase):
     def test_get_path_from_prefix(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
         self.assertEqual(view.get_path_from_prefix(_prefix='.'), '.')
+
+    def test_helpers(self):
+        view = HelperHbsView(self.portal, self.layer['request'])
+        result_file = open(os.path.join(TEST_DATA__DIR, 'helper.html'))
+        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
 
 
 class TestPloneView(unittest.TestCase):

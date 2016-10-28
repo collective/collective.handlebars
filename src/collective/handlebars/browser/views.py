@@ -71,16 +71,19 @@ class HandlebarsMixin:
     def get_partials(self, hbs_dir):
         """ Get partials for rendering the master hbs_template
 
-            The default implementation collects all handlebars
-            templates it findes in the same directory as the
-            master template which are prefixed with underscore `_`
-
         :param hbs_dir: directory of master template
                (/home/vagrant/templates/)
         :return: dictonary with compiled partials templates
                  ({'subitem': <template 'subitem'>})
         """
-        # get all partials from directory, asuming they are prefixed with `_`
+        return {}
+
+    def get_helpers(self):
+        """ Get helpers for rendering the master hbs_template
+
+        :return: dictonary with compiled partials templates
+                 ({'list': self.list_items()})
+        """
         return {}
 
     def hbs_snippet(self, filename=None, _prefix=None):
@@ -101,8 +104,11 @@ class HandlebarsMixin:
         hbs_template = self._get_hbs_template(hbs_file)
         hbs_dir = os.path.dirname(hbs_file)
         partials = self.get_partials(hbs_dir)
+        helpers = self.get_helpers()
 
-        return hbs_template(self.get_contents(), partials=partials)
+        return hbs_template(self.get_contents(),
+                            helpers=helpers,
+                            partials=partials)
 
     def get_path_from_prefix(self, _prefix):
         if isinstance(_prefix, str):
