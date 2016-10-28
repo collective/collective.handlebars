@@ -106,6 +106,8 @@ class HandlebarsMixin:
         partials = self.get_partials(hbs_dir)
         helpers = self.get_helpers()
 
+        self.request.response.setHeader("Content-type",
+                                        "text/html; charset=utf-8")
         return hbs_template(self.get_contents(),
                             helpers=helpers,
                             partials=partials)

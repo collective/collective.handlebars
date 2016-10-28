@@ -5,7 +5,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Explicitly set UTF-8 encoding in response
+  [tomgross]
 
 
 1.1 (2016-10-28)
