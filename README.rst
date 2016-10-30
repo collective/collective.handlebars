@@ -33,6 +33,7 @@ The prodcut provides the following view components with handlebars support:
  - BrowserView
  - Plone template
  - Tile
+ - Persistent Tile
 
 Since portlets and viewlets do not make any assumtion on the
 templating and return everything which is returned by the
@@ -41,7 +42,7 @@ render-method of the Renderer they are supported too.
 Examples
 --------
 
-A handlebar BrowserView: ::
+A handlebars BrowserView: ::
 
   from collective.handlebars.browser.views import HandlebarsBrowserView
 
@@ -100,7 +101,7 @@ And the according configure.zcml: ::
 
   </configure>
 
-A handlebar portlet: ::
+A handlebars portlet: ::
 
   from collective.handlebars.browser.views import HandlebarsMixin
   from plone.app.multilingual.browser.selector import LanguageSelectorViewlet
@@ -127,9 +128,24 @@ A handlebar portlet: ::
       def render(self):
           return self.hbs_snippet(filename='langswitcher.hbs')
 
-A handlebar tile: ::
+A handlebars tile: ::
 
-    class ContactPersonTile(HandlebarTile):
+    class ContactPersonTile(HandlebarsTile):
+
+        def get_contents(self):
+            """ Get CMS data and put it in a JSON format
+            """
+
+            return {
+                'fullname': u'George Miller',
+                'phone': '+1 50 206 67 99',
+                'email': 'george@example.com',
+            }
+
+
+Or a persistent handlebars tile: ::
+
+    class ContactPersonTile(HandlebarsPersistentTile):
 
         def get_contents(self):
             """ Get CMS data and put it in a JSON format
