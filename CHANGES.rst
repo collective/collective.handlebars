@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.2 (unreleased)
+1.2 (2016-10-31)
 ----------------
 
 - Explicitly set UTF-8 encoding in response
