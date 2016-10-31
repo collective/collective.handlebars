@@ -6,7 +6,7 @@ cache:
 python:
   - 2.7
 before_install:
-  - pip install --upgrade pip setuptools zc.buildout
+  - pip install --upgrade pip setuptools==20.7.0 zc.buildout
 install:
   - buildout annotate
   - buildout
