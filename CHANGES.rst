@@ -5,7 +5,8 @@ Changelog
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Set html/body parenthesis for tiles
+  [tomgross]
 
 
 1.2 (2016-10-31)
