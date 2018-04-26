@@ -4,10 +4,14 @@ cache:
   directories:
     - eggs
 python:
-  - 2.7
+  - 2.7.13
+env:
+  - PLONE_VERSION=5.0
+  - PLONE_VERSION=5.1
 before_install:
-  - pip install --upgrade pip setuptools==20.7.0 zc.buildout
+  - pip install -r https://raw.githubusercontent.com/plone/buildout.coredev/5.1/requirements.txt
 install:
+  - sed -ie "s#test-5.1#test-$PLONE_VERSION#" buildout.cfg
   - buildout annotate
   - buildout
 script:

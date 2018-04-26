@@ -19,6 +19,10 @@ TEST_DATA__DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 _ = MessageFactory('my.domain')
 
 
+def normalize(stream):
+    return ' '.join([snippet.strip() for snippet in stream.split()])
+
+
 class DummyHbsTile(HandlebarsTile):
 
     def get_contents(self):
@@ -133,6 +137,12 @@ class TestBrowserView(unittest.TestCase):
         result_file = open(os.path.join(TEST_DATA__DIR, 'helper.html'))
         self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
 
+    def test_render_helper(self):
+        view = HandlebarsBrowserView(self.portal, self.layer['request'])
+        rendered = view._wrap_widget('<em>Hello unittest</em>')
+        self.assertEqual(
+            rendered, '<html><body><em>Hello unittest</em></body></html>')
+
 
 class TestPloneView(unittest.TestCase):
     """Test the collective.handlebars BrowserView component."""
@@ -160,8 +170,15 @@ class TestPloneView(unittest.TestCase):
     def test_example_view(self):
         """Test that a handlebars template is rendered."""
         view = self.portal.restrictedTraverse('@@hbs_test_ploneview')
-        result_file = open(os.path.join(TEST_DATA__DIR, 'minimal_plone.html'))
-        self.assertIn(unicode(result_file.read(), encoding='utf-8'), view())
+        if api.env.plone_version().startswith('5.0'):
+            filename = os.path.join(TEST_DATA__DIR, 'minimal_plone.html')
+        else:
+            filename = os.path.join(TEST_DATA__DIR, 'minimal_plone_51.html')
+        with open(filename) as f:
+            self.assertIn(
+                unicode(f.read().strip(), encoding='utf-8'),
+                normalize(view())
+            )
 
 
 class TestUninstall(unittest.TestCase):

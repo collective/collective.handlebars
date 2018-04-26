@@ -132,6 +132,9 @@ class HandlebarsMixin:
                          default=default,
                          target_language=target_language)
 
+    def _wrap_widget(self, render):
+        return ''.join([u'<html><body>', render, u'</body></html>'])
+
 
 class HandlebarsBrowserView(BrowserView, HandlebarsMixin):
     """ A simple browserview using hbs as templating engine"""
