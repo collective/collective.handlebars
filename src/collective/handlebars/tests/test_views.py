@@ -223,8 +223,10 @@ class TestHandlebarTile(unittest.TestCase):
 
     def test_get_hbs_template(self):
         template = self.tile._get_hbs_template(self.template_path)
-        self.assertEqual(template({'src': 'foo', 'alt': 'bar'}).strip(),
-                         u'<img src="foo" alt="bar">')
+        self.assertEqual(
+            template({'src': 'foo', 'alt': 'bar'}).strip(),
+            u'<img src="foo" alt="bar">'
+        )
 
     def test_get_partial_key(self):
         self.assertEqual(self.tile._get_partial_key(self.template_path),
@@ -237,7 +239,19 @@ class TestHandlebarTile(unittest.TestCase):
     def test_call_with_template(self):
         tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
         setattr(tile, 'index', DummyHbsTemplate(self.template_path))
-        self.assertEqual(tile().strip(), u'<img src="foo" alt="bar">')
+        self.assertEqual(
+            normalize(tile()),
+            u'<html><body><img src="foo" alt="bar"> </body></html>'
+        )
+
+    def test_call_with_body_template(self):
+        template_path = os.path.join(TEST_DATA__DIR, 'body_tile.hbs')
+        tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
+        setattr(tile, 'index', DummyHbsTemplate(template_path))
+        self.assertEqual(
+            tile().strip(),
+            u'<html><body><custom src="foo" alt="bar" /></body></html>'
+        )
 
 
 class TestHandlebarPersistentTile(unittest.TestCase):
@@ -262,8 +276,10 @@ class TestHandlebarPersistentTile(unittest.TestCase):
 
     def test_get_hbs_template(self):
         template = self.tile._get_hbs_template(self.template_path)
-        self.assertEqual(template({'src': 'foo', 'alt': 'bar'}).strip(),
-                         u'<img src="foo" alt="bar">')
+        self.assertEqual(
+            template({'src': 'foo', 'alt': 'bar'}).strip(),
+            u'<img src="foo" alt="bar">'
+        )
 
     def test_get_partial_key(self):
         self.assertEqual(self.tile._get_partial_key(self.template_path),
@@ -276,4 +292,7 @@ class TestHandlebarPersistentTile(unittest.TestCase):
     def test_call_with_template(self):
         tile = DummyHbsTile(self.layer['portal'], self.layer['request'])
         setattr(tile, 'index', DummyHbsTemplate(self.template_path))
-        self.assertEqual(tile().strip(), u'<img src="foo" alt="bar">')
+        self.assertEqual(
+            normalize(tile()),
+            u'<html><body><img src="foo" alt="bar"> </body></html>'
+        )

@@ -32,3 +32,4 @@ report.html
 !.travis.yml
 !src/collective
 .*.cfg
+.Python

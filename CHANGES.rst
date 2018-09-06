@@ -5,7 +5,8 @@ Changelog
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Wrap tile so it works with newer versions of Mosaic
+  [tomgross]
 
 
 1.3 (2018-04-26)
