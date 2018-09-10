@@ -133,6 +133,8 @@ class HandlebarsMixin:
                          target_language=target_language)
 
     def _wrap_widget(self, render):
+        if render and render.startswith(u'<html><body>'):
+            return render
         return ''.join([u'<html><body>', render, u'</body></html>'])
 
 
@@ -156,7 +158,7 @@ class HandlebarsPloneView(BrowserView, HandlebarsMixin):
 class HandlebarsTile(Tile, HandlebarsMixin):
 
     def __call__(self, *args, **kwargs):
-        return self.hbs_snippet()
+        return self._wrap_widget(self.hbs_snippet())
 
 
 # BBB
@@ -166,6 +168,6 @@ HandlebarTile = HandlebarsTile
 class HandlebarsPersistentTile(PersistentTile, HandlebarsMixin):
 
     def __call__(self, *args, **kwargs):
-        return self.hbs_snippet()
+        return self._wrap_widget(self.hbs_snippet())
 
 # EOF

@@ -9,7 +9,7 @@ env:
   - PLONE_VERSION=5.0
   - PLONE_VERSION=5.1
 before_install:
-  - pip install -r https://raw.githubusercontent.com/plone/buildout.coredev/5.1/requirements.txt
+  - pip install -r requirements.txt
 install:
   - sed -ie "s#test-5.1#test-$PLONE_VERSION#" buildout.cfg
   - buildout annotate
