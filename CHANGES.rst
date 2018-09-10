@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.4 (unreleased)
+1.4 (2018-09-10)
 ----------------
 
 - Wrap tile so it works with newer versions of Mosaic
