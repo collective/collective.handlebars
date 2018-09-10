@@ -14,7 +14,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='collective.handlebars',
-    version='1.4',
+    version='1.5.dev0',
     description="Handlebars for Plone",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
