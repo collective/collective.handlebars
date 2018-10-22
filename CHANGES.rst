@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.5 (unreleased)
-----------------
+1.4.1 (2018-10-22)
+------------------
 
 - Add div-element to wrapper to support cases where only text is provided
   (otherwise plone.protect can fail) 
