@@ -139,9 +139,9 @@ class TestBrowserView(unittest.TestCase):
 
     def test_render_helper(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
-        rendered = view._wrap_widget('<em>Hello unittest</em>')
+        rendered = view._wrap_widget('Hello unittest')
         self.assertEqual(
-            rendered, '<html><body><em>Hello unittest</em></body></html>')
+            rendered, '<html><body><div>Hello unittest</div></body></html>')
 
 
 class TestPloneView(unittest.TestCase):
@@ -241,7 +241,7 @@ class TestHandlebarTile(unittest.TestCase):
         setattr(tile, 'index', DummyHbsTemplate(self.template_path))
         self.assertEqual(
             normalize(tile()),
-            u'<html><body><img src="foo" alt="bar"> </body></html>'
+            u'<html><body><div><img src="foo" alt="bar"> </div></body></html>'
         )
 
     def test_call_with_body_template(self):
@@ -294,5 +294,5 @@ class TestHandlebarPersistentTile(unittest.TestCase):
         setattr(tile, 'index', DummyHbsTemplate(self.template_path))
         self.assertEqual(
             normalize(tile()),
-            u'<html><body><img src="foo" alt="bar"> </body></html>'
+            u'<html><body><div><img src="foo" alt="bar"> </div></body></html>'
         )

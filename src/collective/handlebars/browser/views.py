@@ -135,7 +135,7 @@ class HandlebarsMixin:
     def _wrap_widget(self, render):
         if render and render.startswith(u'<html><body>'):
             return render
-        return ''.join([u'<html><body>', render, u'</body></html>'])
+        return ''.join([u'<html><body><div>', render, u'</div></body></html>'])
 
 
 class HandlebarsBrowserView(BrowserView, HandlebarsMixin):

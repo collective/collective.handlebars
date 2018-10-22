@@ -33,3 +33,4 @@ report.html
 !src/collective
 .*.cfg
 .Python
+Pipfile*
