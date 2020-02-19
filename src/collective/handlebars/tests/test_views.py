@@ -9,8 +9,9 @@ from plone import api
 from zope.i18nmessageid import MessageFactory
 from zope import component, interface
 from zope.i18n.interfaces import ITranslationDomain
-import os.path
 
+import os.path
+import six
 import unittest
 
 
@@ -104,11 +105,12 @@ class TestBrowserView(unittest.TestCase):
         """Test that a handlebars template is rendered."""
         view = self.portal.restrictedTraverse('@@hbs_test_view')
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), six.ensure_text(result_file.read()))
 
     def test_translate(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
         component.provideUtility(TestDomain(Allowed=_('Erlaubt')),
+                                 provides=ITranslationDomain,
                                  name='my.domain')
         self.assertEqual(view.translate(_('Allowed'), target_language='de'),
                          (u'Erlaubt', 'de'))
@@ -116,13 +118,14 @@ class TestBrowserView(unittest.TestCase):
     def test_translate_default_lang(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
         component.provideUtility(TestDomain(Allowed=_('Allowed')),
+                                 provides=ITranslationDomain,
                                  name='my.domain')
         self.assertEqual(view.translate(_('Allowed')), (u'Allowed', 'en'))
 
     def test_hbs_snippet(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal_file.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), six.ensure_text(result_file.read()))
 
     def test_hbs_snippet_nofile(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
@@ -135,7 +138,7 @@ class TestBrowserView(unittest.TestCase):
     def test_helpers(self):
         view = HelperHbsView(self.portal, self.layer['request'])
         result_file = open(os.path.join(TEST_DATA__DIR, 'helper.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), six.ensure_text(result_file.read()))
 
     def test_render_helper(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
@@ -176,30 +179,9 @@ class TestPloneView(unittest.TestCase):
             filename = os.path.join(TEST_DATA__DIR, 'minimal_plone_51.html')
         with open(filename) as f:
             self.assertIn(
-                unicode(f.read().strip(), encoding='utf-8'),
+                six.ensure_text(f.read().strip()),
                 normalize(view())
             )
-
-
-class TestUninstall(unittest.TestCase):
-
-    layer = COLLECTIVE_HANDLEBARS_INTEGRATION_TESTING
-
-    def setUp(self):
-        self.portal = self.layer['portal']
-        self.installer = api.portal.get_tool('portal_quickinstaller')
-        self.installer.uninstallProducts(['collective.handlebars'])
-
-    def test_product_uninstalled(self):
-        """Test if collective.handlebars is cleanly uninstalled."""
-        self.assertFalse(self.installer.isProductInstalled(
-            'collective.handlebars'))
-
-    def test_browserlayer_removed(self):
-        """Test that ICollectiveHandlebarsLayer is removed."""
-        from collective.handlebars.interfaces import ICollectiveHandlebarsLayer
-        from plone.browserlayer import utils
-        self.assertNotIn(ICollectiveHandlebarsLayer, utils.registered_layers())
 
 
 class TestHandlebarTile(unittest.TestCase):

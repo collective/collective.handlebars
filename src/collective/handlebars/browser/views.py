@@ -9,6 +9,7 @@ from pybars import Compiler
 from zope.i18n import translate
 
 import os.path
+import six
 import sys
 
 try:
@@ -63,9 +64,9 @@ class HandlebarsMixin:
             compiled_template = HBS_REGISTRY[hbs_filename]
         else:
             with open(hbs_filename) as f:
-                hbs_template = unicode(f.read(), 'utf-8')
-                compiled_template = compiler.compile(hbs_template)
-                HBS_REGISTRY[hbs_filename] = compiled_template
+                hbs_template = six.ensure_text(f.read())
+            compiled_template = compiler.compile(hbs_template)
+            HBS_REGISTRY[hbs_filename] = compiled_template
         return compiled_template
 
     def get_partials(self, hbs_dir):

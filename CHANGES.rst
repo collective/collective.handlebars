@@ -5,14 +5,16 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Python 3 / Plone 5.2 compatibility
+- Update dependencies
+- Move to Github CI
 
 
 1.4.1 (2018-10-22)
 ------------------
 
 - Add div-element to wrapper to support cases where only text is provided
-  (otherwise plone.protect can fail) 
+  (otherwise plone.protect can fail)
   [tomgross]
 
 1.4 (2018-09-10)

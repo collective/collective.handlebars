@@ -6,6 +6,22 @@ from plone import api
 import unittest
 
 
+try:
+    from Products.CMFPlone.utils import get_installer
+except ImportError:  # pragma: no cover
+    # Quick shim for 5.1 api change
+
+    class get_installer(object):   # noqa
+        def __init__(self, portal, request):   # noqa
+            self.installer = api.portal.get_tool(name='portal_quickinstaller')
+
+        def is_product_installed(self, name):
+            return self.installer.isProductInstalled(name)
+
+        def uninstall_product(self, name):
+            return self.installer.uninstallProducts([name])
+
+
 class TestSetup(unittest.TestCase):
     """Test that collective.handlebars is properly installed."""
 
@@ -14,11 +30,11 @@ class TestSetup(unittest.TestCase):
     def setUp(self):
         """Custom shared utility setup for tests."""
         self.portal = self.layer['portal']
-        self.installer = api.portal.get_tool('portal_quickinstaller')
+        self.installer = get_installer(self.portal, self.layer["request"])
 
     def test_product_installed(self):
         """Test if collective.handlebars is installed."""
-        self.assertTrue(self.installer.isProductInstalled(
+        self.assertTrue(self.installer.is_product_installed(
             'collective.handlebars'))
 
     def test_browserlayer(self):
@@ -35,12 +51,12 @@ class TestUninstall(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-        self.installer = api.portal.get_tool('portal_quickinstaller')
-        self.installer.uninstallProducts(['collective.handlebars'])
+        self.installer = get_installer(self.portal, self.layer["request"])
+        self.installer.uninstall_product('collective.handlebars')
 
     def test_product_uninstalled(self):
         """Test if collective.handlebars is cleanly uninstalled."""
-        self.assertFalse(self.installer.isProductInstalled(
+        self.assertFalse(self.installer.is_product_installed(
             'collective.handlebars'))
 
     def test_browserlayer_removed(self):
