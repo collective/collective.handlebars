@@ -63,7 +63,7 @@ class HandlebarsMixin:
             compiled_template = HBS_REGISTRY[hbs_filename]
         else:
             with open(hbs_filename) as f:
-                hbs_template = unicode(f.read(), 'utf-8')
+                hbs_template = f.read()
                 compiled_template = compiler.compile(hbs_template)
                 HBS_REGISTRY[hbs_filename] = compiled_template
         return compiled_template

@@ -104,7 +104,7 @@ class TestBrowserView(unittest.TestCase):
         """Test that a handlebars template is rendered."""
         view = self.portal.restrictedTraverse('@@hbs_test_view')
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), result_file.read())
 
     def test_translate(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
@@ -122,7 +122,7 @@ class TestBrowserView(unittest.TestCase):
     def test_hbs_snippet(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
         result_file = open(os.path.join(TEST_DATA__DIR, 'minimal_file.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), result_file.read())
 
     def test_hbs_snippet_nofile(self):
         view = DummyHbsFile(self.portal, self.layer['request'])
@@ -135,7 +135,7 @@ class TestBrowserView(unittest.TestCase):
     def test_helpers(self):
         view = HelperHbsView(self.portal, self.layer['request'])
         result_file = open(os.path.join(TEST_DATA__DIR, 'helper.html'))
-        self.assertEqual(view(), unicode(result_file.read(), encoding='utf-8'))
+        self.assertEqual(view(), result_file.read())
 
     def test_render_helper(self):
         view = HandlebarsBrowserView(self.portal, self.layer['request'])
@@ -176,7 +176,7 @@ class TestPloneView(unittest.TestCase):
             filename = os.path.join(TEST_DATA__DIR, 'minimal_plone_51.html')
         with open(filename) as f:
             self.assertIn(
-                unicode(f.read().strip(), encoding='utf-8'),
+                f.read().strip(),
                 normalize(view())
             )
 
