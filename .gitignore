@@ -34,3 +34,5 @@ report.html
 .*.cfg
 .Python
 Pipfile*
+.idea
+pyvenv.cfg

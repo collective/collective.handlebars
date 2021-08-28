@@ -9,16 +9,21 @@ from pybars import Compiler
 from zope.i18n import translate
 
 import os.path
+import six
 import sys
 
 try:
-    get_distribution('plone.tiles')
-except DistributionNotFound:   # pragma: no cover
+    get_distribution("plone.tiles")
+except DistributionNotFound:  # pragma: no cover
+
     class Tile(BrowserView):
         """Fake Tile which is only a BrowserView"""
+
     class PersistentTile(BrowserView):
         """Fake persistent Tile which is only a BrowserView"""
-else:    # pragma: no cover
+
+
+else:  # pragma: no cover
     from plone.tiles.tile import Tile
     from plone.tiles.tile import PersistentTile
 
@@ -34,9 +39,8 @@ def package_home(gdict):
 
 
 class HandlebarsMixin:
-
     def get_contents(self):
-        """ Get CMS data and put it in a JSON format for hbs inclusion
+        """Get CMS data and put it in a JSON format for hbs inclusion
 
         :return: dictonary (must not be a JSON structure!
                  The conversion is handled by the templating engine)
@@ -63,13 +67,13 @@ class HandlebarsMixin:
             compiled_template = HBS_REGISTRY[hbs_filename]
         else:
             with open(hbs_filename) as f:
-                hbs_template = unicode(f.read(), 'utf-8')
-                compiled_template = compiler.compile(hbs_template)
-                HBS_REGISTRY[hbs_filename] = compiled_template
+                hbs_template = six.ensure_text(f.read())
+            compiled_template = compiler.compile(hbs_template)
+            HBS_REGISTRY[hbs_filename] = compiled_template
         return compiled_template
 
     def get_partials(self, hbs_dir):
-        """ Get partials for rendering the master hbs_template
+        """Get partials for rendering the master hbs_template
 
         :param hbs_dir: directory of master template
                (/home/vagrant/templates/)
@@ -79,7 +83,7 @@ class HandlebarsMixin:
         return {}
 
     def get_helpers(self):
-        """ Get helpers for rendering the master hbs_template
+        """Get helpers for rendering the master hbs_template
 
         :return: dictonary with compiled partials templates
                  ({'list': self.list_items()})
@@ -92,25 +96,26 @@ class HandlebarsMixin:
             path = self.get_path_from_prefix(_prefix)
             hbs_file = os.path.join(path, filename)
             if not os.path.isfile(hbs_file):
-                raise ValueError('No such file', hbs_file)
-        elif hasattr(self, 'index'):  # noqa
+                raise ValueError("No such file", hbs_file)
+        elif hasattr(self, "index"):  # noqa
             # second scenario: get snippet from zcml
             # reuse filename from tile definition in zcml but read file here
             # otherwise it is interpreted as XML/PT
             hbs_file = self.index.filename
         else:
-            raise ValueError('No template found!')
+            raise ValueError("No template found!")
 
         hbs_template = self._get_hbs_template(hbs_file)
         hbs_dir = os.path.dirname(hbs_file)
         partials = self.get_partials(hbs_dir)
         helpers = self.get_helpers()
 
-        self.request.response.setHeader("Content-type",
-                                        "text/html; charset=utf-8")
-        return hbs_template(self.get_contents(),
-                            helpers=helpers,
-                            partials=partials)
+        self.request.response.setHeader(
+            "Content-type", "text/html; charset=utf-8"
+        )
+        return hbs_template(
+            self.get_contents(), helpers=helpers, partials=partials
+        )
 
     def get_path_from_prefix(self, _prefix):
         if isinstance(_prefix, str):
@@ -121,42 +126,51 @@ class HandlebarsMixin:
             path = package_home(_prefix)
         return path
 
-    def translate(self, msgid, domain=None, mapping=None, context=None,
-                  target_language=None, default=None):
+    def translate(
+        self,
+        msgid,
+        domain=None,
+        mapping=None,
+        context=None,
+        target_language=None,
+        default=None,
+    ):
         if not target_language:
             target_language = api.portal.get_current_language(context)
-        return translate(msgid=msgid,
-                         domain=domain,
-                         mapping=mapping,
-                         context=context,
-                         default=default,
-                         target_language=target_language)
+        return translate(
+            msgid=msgid,
+            domain=domain,
+            mapping=mapping,
+            context=context,
+            default=default,
+            target_language=target_language,
+        )
 
     def _wrap_widget(self, render):
-        if render and render.startswith(u'<html><body>'):
+        if render and render.startswith(u"<html><body>"):
             return render
-        return ''.join([u'<html><body><div>', render, u'</div></body></html>'])
+        return "".join([u"<html><body><div>", render, u"</div></body></html>"])
 
 
 class HandlebarsBrowserView(BrowserView, HandlebarsMixin):
-    """ A simple browserview using hbs as templating engine"""
+    """A simple browserview using hbs as templating engine"""
 
     def __call__(self, *args, **kwargs):
         return self.hbs_snippet()
 
 
 class HandlebarsPloneView(BrowserView, HandlebarsMixin):
-    """ A hbs view rendered in the content slot of the main template of Plone
-    """
+    """A hbs view rendered in the content slot of the main template of Plone"""
 
-    main_template = ViewPageTemplateFile('templates/plone_standard_template.pt')  # noqa
+    main_template = ViewPageTemplateFile(
+        "templates/plone_standard_template.pt"
+    )
 
     def __call__(self, *args, **kwargs):
         return self.main_template(*args, **kwargs)
 
 
 class HandlebarsTile(Tile, HandlebarsMixin):
-
     def __call__(self, *args, **kwargs):
         return self._wrap_widget(self.hbs_snippet())
 
@@ -166,8 +180,8 @@ HandlebarTile = HandlebarsTile
 
 
 class HandlebarsPersistentTile(PersistentTile, HandlebarsMixin):
-
     def __call__(self, *args, **kwargs):
         return self._wrap_widget(self.hbs_snippet())
+
 
 # EOF

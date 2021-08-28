@@ -2,17 +2,29 @@ Changelog
 =========
 
 
-1.5 (unreleased)
+1.6 (unreleased)
 ----------------
 
 - Nothing changed yet.
+
+
+1.5 (2021-08-28)
+----------------
+
+- Python 3 / Plone 5.2 compatibility
+  [adrianschulz, tomgross]
+
+- Update dependencies
+- Move to Github CI
+- Apply black formatting
+  [tomgross]
 
 
 1.4.1 (2018-10-22)
 ------------------
 
 - Add div-element to wrapper to support cases where only text is provided
-  (otherwise plone.protect can fail) 
+  (otherwise plone.protect can fail)
   [tomgross]
 
 1.4 (2018-09-10)

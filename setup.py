@@ -14,19 +14,22 @@ long_description = '\n\n'.join([
 
 setup(
     name='collective.handlebars',
-    version='1.5.dev0',
+    version='1.6.dev0',
     description="Handlebars for Plone",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
-        "Framework :: Plone :: 5.0",
         "Framework :: Plone :: 5.1",
+        "Framework :: Plone :: 5.2",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+        "Development Status :: 5 - Production/Stable"
     ],
     keywords='Python Plone',
     author='Tom Gross',
@@ -43,6 +46,7 @@ setup(
         'Products.GenericSetup>=1.8.2',
         'setuptools',
         'pybars3',
+        'six'
     ],
     extras_require={
         'test': [
