@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.5 (unreleased)
+1.5 (2021-08-28)
 ----------------
 
 - Python 3 / Plone 5.2 compatibility
