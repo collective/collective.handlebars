@@ -6,8 +6,12 @@ Changelog
 ----------------
 
 - Python 3 / Plone 5.2 compatibility
+  [adrianschulz, tomgross]
+
 - Update dependencies
 - Move to Github CI
+- Apply black formatting
+  [tomgross]
 
 
 1.4.1 (2018-10-22)
