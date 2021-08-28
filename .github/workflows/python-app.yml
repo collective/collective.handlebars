@@ -46,3 +46,7 @@ jobs:
       # test
       - name: test
         run: bin/coverage run bin/test
+
+      # coveralls
+      - name: coveralls
+        run: bin/coveralls
