@@ -47,6 +47,7 @@ jobs:
       - name: test
         run: bin/coverage run bin/test
 
-      # coveralls
-      - name: coveralls
-        run: bin/coveralls
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
