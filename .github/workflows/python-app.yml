@@ -47,6 +47,8 @@ jobs:
       - name: test
         run: bin/coverage run bin/test
 
-      # coveralls
-      - name: coveralls
-        run: bin/coveralls
+      - name: Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bin/coveralls --service=github
